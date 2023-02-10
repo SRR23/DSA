@@ -1,11 +1,1 @@
-5
-4
-QQAA
-4
-QQAQ
-3
-QAA
-1
-Q
-14
-QAQQAQAAQQQAAA
+aaaa
