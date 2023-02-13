@@ -1,3 +1,10 @@
+
+// Each of them has a single number written on it — either 1 or 2.
+// You will need to put all the tiles from the bag in a sequence, in any order
+// you wish. We will then compute the sums of all prefixes in the sequence,
+// and then count how many of these sums are prime numbers. If you want to keep
+// the prize, you will need to maximize the number of primes you get.
+
 #include <bits/stdc++.h>
 using namespace std;
 int main()
