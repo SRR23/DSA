@@ -8,48 +8,37 @@
 
 #include <bits/stdc++.h>
 using namespace std;
-#define ll long long
-
-void solve()
-{
-    ll n, q;
-    cin >> n >> q;
-    vector<ll> a(n + 1);
-    vector<ll> pref(n + 1);
-    cin >> a[1];
-    pref[1] = a[1];
-    for (int i = 2; i <= n; i++)
-    {
-        cin >> a[i];
-        pref[i] = pref[i - 1] + a[i];
-    }
-    for (ll i = 0; i < q; i++)
-    {
-        ll l, r, k;
-        cin >> l >> r >> k;
-        ll sum = 0;
-        sum = pref[n] + (r - l + 1) * k - (pref[r] - pref[l] + a[l]);
-
-        if (sum % 2)
-            cout << "yes\n";
-        else
-            cout << "no\n";
-    }
-}
-
+long long n, a[200005], q, sum = 0, pref[200005], t;
 int main()
 {
-    ios_base::sync_with_stdio(false);
-    cin.tie(NULL);
-    // #ifndef ONLINE_JUDGE
-    //     freopen("input.txt", "r", stdin);
-    //     freopen("output.txt", "w", stdout);
-    // #endif
-    int t;
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    cout.tie(0);
     cin >> t;
     while (t--)
     {
-        solve();
+        sum = 0;
+        cin >> n >> q;
+        for (int i = 1; i <= n; i++)
+        {
+            cin >> a[i];
+            sum += a[i];
+            pref[i] = pref[i - 1];
+            pref[i] += a[i];
+        }
+        for (int i = 0; i < q; i++)
+        {
+            long long l, r, k;
+            cin >> l >> r >> k;
+            long long ans = pref[n] - (pref[r] - pref[l - 1]) + k * (r - l + 1);
+            if (ans % 2 == 1)
+            {
+                cout << "YES" << endl;
+            }
+            else
+            {
+                cout << "NO" << endl;
+            }
+        }
     }
-    return 0;
 }
