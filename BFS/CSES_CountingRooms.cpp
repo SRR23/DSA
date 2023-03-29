@@ -1,45 +1,40 @@
 #include <bits/stdc++.h>
 using namespace std;
-const int N = 2002;
+const int N = 1e3 + 5;
 
-int maze[N][N], visited[N][N];
-int level[N][N];
+char s[N][N];
 int n, m;
+int vis[N][N];
 
 int dx[] = {0, 0, -1, 1};
 int dy[] = {1, -1, 0, 0};
 
-bool is_inside(pair<int, int> coord)
+bool is_inside(int i, int j)
 {
-    int x = coord.first;
-    int y = coord.second;
-
-    if (x >= 0 && x < n && y >= 0 && y < m)
+    if (i >= 0 && i < n && j >= 0 && j < m)
     {
         return true;
     }
     return false;
 }
 
-bool is_safe(pair<int, int> coord)
+bool is_safe(int i, int j)
 {
-    int x = coord.first;
-    int y = coord.second;
-    if (maze[x][y] == -1)
+
+    if (vis[i][j] || s[i][j] == '#')
     {
         return false;
     }
     return true;
 }
 
-void bfs(pair<int, int> src)
+void bfs(int i, int j)
 {
 
     queue<pair<int, int>> q;
-    visited[src.first][src.second] = 1;
-    level[src.first][src.second] = 0;
+    vis[i][j] = 1;
 
-    q.push(src);
+    q.push({i, j});
 
     while (!q.empty())
     {
@@ -53,88 +48,45 @@ void bfs(pair<int, int> src)
             int new_x = x + dx[i];
             int new_y = y + dy[i];
 
-            pair<int, int> adj_node = {new_x, new_y};
-
-            if (is_inside(adj_node) && is_safe(adj_node) && visited[new_x][new_y] == 0)
+            if (is_inside(new_x, new_y) && is_safe(new_x, new_y))
             {
-                visited[new_x][new_y] = 1;
-                q.push(adj_node);
+                vis[new_x][new_y] = 1;
+                q.push({new_x, new_y});
             }
         }
     }
-}
-
-pair<int, int> find_unvisited()
-{
-
-    for (int i = 0; i < n; i++)
-    {
-        for (int j = 0; j < m; j++)
-        {
-            if (visited[i][j] == 0 && maze[i][j] == 0)
-            {
-                return {i, j};
-            }
-        }
-    }
-    return {-1, -1};
 }
 
 int main()
 {
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
 
     cin >> n >> m;
 
-    pair<int, int> src, dst;
     for (int i = 0; i < n; i++)
     {
-        for (int j = 0; j < n; j++)
-        {
-            level[i][j] = -1;
-        }
-    }
-
-    for (int i = 0; i < n; i++)
-    {
-        string input;
-        cin >> input;
         for (int j = 0; j < m; j++)
         {
-            if (input[j] == '#')
-            {
-                maze[i][j] = -1;
-            }
-            else if (input[j] == 'A')
-            {
-                src = {i, j};
-            }
-            else if (input[j] == 'B')
-            {
-                dst = {i, j};
-            }
+            cin >> s[i][j];
         }
     }
 
-    // for(int i = 0 ; i < n ; i++) {
-    //     for(int j = 0; j < m ; j++) {
-    //         cout<<maze[i][j]<<"\t";
-    //     }
-    //     cout<<endl;
-    // }
-    // cout<<endl;
+    int cnt = 0;
 
-    int room_cnt = 0;
-
-    while (true)
+    for (int i = 0; i < n; i++)
     {
-        pair<int, int> unvisited_pos = find_unvisited();
-        if (unvisited_pos == pair<int, int>(-1, -1))
+        for (int j = 0; j < m; j++)
         {
-            break;
+            if (!vis[i][j] && s[i][j] == '.')
+            {
+                bfs(i, j);
+                cnt++;
+            }
         }
-        bfs(unvisited_pos);
-        room_cnt++;
     }
-    cout << room_cnt << '\n';
+
+    cout << cnt << '\n';
     return 0;
 }
