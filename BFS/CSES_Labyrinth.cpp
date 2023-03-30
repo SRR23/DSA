@@ -1,46 +1,32 @@
 #include <bits/stdc++.h>
 using namespace std;
-const int N = 2002;
+const int N = 1e3 + 5;
 
-int maze[N][N], visited[N][N];
+int n, m;
+char s[N][N];
+int vis[N][N];
 int level[N][N];
 map<pair<int, int>, pair<int, int>> parnt;
-int n, m;
 
 int dx[] = {0, 0, -1, 1};
 int dy[] = {1, -1, 0, 0};
 
-bool is_inside(pair<int, int> coord)
+bool is_inside(int i, int j)
 {
-    int x = coord.first;
-    int y = coord.second;
-
-    if (x >= 0 && x < n && y >= 0 && y < m)
-    {
-        return true;
-    }
-    return false;
+    return (i >= 0 && i < n && j >= 0 && j < m);
 }
 
-bool is_safe(pair<int, int> coord)
+bool is_safe(int i, int j)
 {
-    int x = coord.first;
-    int y = coord.second;
-    if (maze[x][y] == -1)
-    {
-        return false;
-    }
-    return true;
+    return (!vis[i][j] && s[i][j] != '#');
 }
 
-void bfs(pair<int, int> src)
+void bfs(int i, int j)
 {
-
     queue<pair<int, int>> q;
-    visited[src.first][src.second] = 1;
-    level[src.first][src.second] = 0;
+    vis[i][j] = 1;
 
-    q.push(src);
+    q.push({i, j});
 
     while (!q.empty())
     {
@@ -49,19 +35,17 @@ void bfs(pair<int, int> src)
         int x = head.first;
         int y = head.second;
 
-        for (int i = 0; i < 4; i++)
+        for (int k = 0; k < 4; k++)
         {
-            int new_x = x + dx[i];
-            int new_y = y + dy[i];
+            int new_x = x + dx[k];
+            int new_y = y + dy[k];
 
-            pair<int, int> adj_node = {new_x, new_y};
-
-            if (is_inside(adj_node) && is_safe(adj_node) && visited[new_x][new_y] == 0)
+            if (is_inside(new_x, new_y) && is_safe(new_x, new_y))
             {
-                visited[new_x][new_y] = 1;
+                vis[new_x][new_y] = 1;
                 level[new_x][new_y] = level[x][y] + 1;
                 parnt[{new_x, new_y}] = {x, y};
-                q.push(adj_node);
+                q.push({new_x, new_y});
             }
         }
     }
@@ -69,81 +53,67 @@ void bfs(pair<int, int> src)
 
 int main()
 {
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
 
     cin >> n >> m;
 
-    pair<int, int> src, dst;
-    for (int i = 0; i < n; i++)
-    {
-        for (int j = 0; j < n; j++)
-        {
-            level[i][j] = -1;
-        }
-    }
+    int x1 = -1, x2 = -1, y1 = -1, y2 = -1;
 
     for (int i = 0; i < n; i++)
     {
-        string input;
-        cin >> input;
         for (int j = 0; j < m; j++)
         {
-            if (input[j] == '#')
+            cin >> s[i][j];
+
+            if (s[i][j] == 'A')
             {
-                maze[i][j] = -1;
+                x1 = i;
+                y1 = j;
             }
-            else if (input[j] == 'A')
+            else if (s[i][j] == 'B')
             {
-                src = {i, j};
-            }
-            else if (input[j] == 'B')
-            {
-                dst = {i, j};
+                x2 = i;
+                y2 = j;
             }
         }
     }
 
-    // for(int i = 0 ; i < n ; i++) {
-    //     for(int j = 0; j < m ; j++) {
-    //         cout<<maze[i][j]<<"\t";
-    //     }
-    //     cout<<endl;
-    // }
-    // cout<<endl;
+    bfs(x1, y1);
 
-    bfs(src);
-
-    if (level[dst.first][dst.second] == -1)
+    if (!vis[x2][y2])
     {
         cout << "NO" << '\n';
     }
     else
     {
-
         cout << "YES" << '\n';
-        cout << level[dst.first][dst.second] << '\n';
+        cout << level[x2][y2] << '\n';
         string ans;
-        while (dst.first != src.first || dst.second != src.second)
+        while (x2 != x1 || y2 != y1)
         {
-            int x = parnt[{dst.first, dst.second}].first;
-            int y = parnt[{dst.first, dst.second}].second;
-            if (x == dst.first + 1)
+            int p = parnt[{x2, y2}].first;
+            int q = parnt[{x2, y2}].second;
+
+            if (p == x2 + 1)
             {
                 ans.push_back('U');
             }
-            if (x == dst.first - 1)
+            if (p == x2 - 1)
             {
                 ans.push_back('D');
             }
-            if (y == dst.second + 1)
+            if (q == y2 + 1)
             {
                 ans.push_back('L');
             }
-            if (y == dst.second - 1)
+            if (q == y2 - 1)
             {
                 ans.push_back('R');
             }
-            dst.first = x;
-            dst.second = y;
+            x2 = p;
+            y2 = q;
         }
         reverse(ans.begin(), ans.end());
         cout << ans << '\n';
