@@ -1,9 +1,10 @@
 #include <bits/stdc++.h>
 using namespace std;
+const int mod = 1e9 + 7;
 const int N = 1e5 + 5;
 int h[N], dp[N];
 
-int mn_cost(int n)
+int cnt(int n)
 {
     if (n == 1)
     {
@@ -13,16 +14,15 @@ int mn_cost(int n)
     {
         return dp[n];
     }
-
-    int ans1 = mn_cost(n - 1) + abs(h[n] - h[n - 1]);
-    if (n == 2)
+    int mn = INT_MAX;
+    for (int i = 1; i <= 2; i++)
     {
-        dp[n] = ans1;
-        return ans1;
+        if (n - i > 0)
+        {
+            mn = min(mn, cnt(n - i) + abs(h[n] - h[n - i]));
+        }
     }
-    int ans2 = mn_cost(n - 2) + abs(h[n] - h[n - 2]);
-
-    return dp[n] = min(ans1, ans2);
+    return dp[n] = mn;
 }
 
 int main()
@@ -41,5 +41,5 @@ int main()
     {
         dp[i] = -1;
     }
-    cout << mn_cost(n) << '\n';
+    cout << cnt(n) << '\n';
 }
