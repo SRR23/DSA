@@ -1,41 +1,28 @@
+
+// Coin change variation
+// similar as CSES_CoinCombinations_2
+
 #include <bits/stdc++.h>
 using namespace std;
 
 class Solution
 {
 public:
-    int dp[10001];
-    int solve(int n, vector<int> &coins, int sum)
+    int change(int amount, vector<int> &coins)
     {
-        if (sum == 0)
-        {
-            return 1;
-        }
-        if (dp[sum] != -1)
-        {
-            return dp[sum];
-        }
-        int ans = solve(n - 1, coins, sum);
+        vector<int> dp(amount + 1);
+        dp[0] = 1;
         for (auto it : coins)
         {
-            if (sum - it >= 0)
+            for (int j = 0; j <= amount; j++)
             {
-                ans += solve(n, coins, sum - it);
+                if (j - it >= 0)
+                {
+                    dp[j] += dp[j - it];
+                }
             }
         }
-        return dp[sum] = ans;
-    }
-
-    int coinChange(vector<int> &coins, int amount)
-    {
-        int n = coins.size();
-        memset(dp, -1, sizeof(dp));
-
-        // if (solve(coins, amount) == 0)
-        // {
-        //     return 0;
-        // }
-        return solve(n - 1, coins, amount);
+        return dp[amount];
     }
 };
 
@@ -53,5 +40,5 @@ int main()
         cin >> v[i];
     }
     Solution func;
-    cout << func.coinChange(v, m) << '\n';
+    cout << func.change(m, v) << '\n';
 }
