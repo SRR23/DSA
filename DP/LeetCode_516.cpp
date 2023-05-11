@@ -6,46 +6,37 @@ using namespace std;
 
 class Solution
 {
-public:
-    int n, m;
-    string b;
-    int dp[1003][1003];
-    int LCS(int i, int j, string &a)
+private:
+    vector<vector<int>> dp;
+
+    int LCS(string &a, string &b, int i, int j)
     {
-        if (i == n || j == m)
-        {
+        if (i == a.size() || j == b.size())
             return 0;
-        }
+
         if (dp[i][j] != -1)
-        {
             return dp[i][j];
-        }
+
         if (a[i] == b[j])
         {
-            int ans = 1 + LCS(i + 1, j + 1, a);
+            int ans = 1 + LCS(a, b, i + 1, j + 1);
             return dp[i][j] = ans;
         }
-        int ans = max(LCS(i + 1, j, a), LCS(i, j + 1, a));
+        int ans = max(LCS(a, b, i + 1, j), LCS(a, b, i, j + 1));
         return dp[i][j] = ans;
     }
 
+public:
     int longestPalindromeSubseq(string s)
     {
-        for (int i = 0; i < s.size(); i++)
-        {
-            b.push_back(s[i]);
-        }
+        string b = s;
         reverse(b.begin(), b.end());
-        n = s.size();
-        m = b.size();
-        for (int i = 0; i <= n; i++)
-        {
-            for (int j = 0; j <= m; j++)
-            {
-                dp[i][j] = -1;
-            }
-        }
-        return LCS(0, 0, s);
+
+        int size = s.size();
+
+        dp.resize(size + 1, vector<int>(size + 1, -1));
+
+        return LCS(s, b, 0, 0);
     }
 };
 
