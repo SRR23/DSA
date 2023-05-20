@@ -1,5 +1,6 @@
 
 // same as CSES_MinimizingCoins
+// Unbound Knapsack
 
 #include <bits/stdc++.h>
 using namespace std;
