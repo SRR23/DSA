@@ -13,10 +13,12 @@ class linked_list
 {
 public:
     node *head;
+    node *tail;
     int sz;
     linked_list()
     {
         head = NULL;
+        tail = NULL;
         sz = 0;
     }
     node *CreateNewNode(int value)
@@ -26,6 +28,8 @@ public:
         NewNode->nxt = NULL;
         return NewNode;
     }
+
+    // O(1)
     void InsertAtHead(int value)
     {
         sz++;
@@ -33,10 +37,20 @@ public:
         if (head == NULL)
         {
             head = a;
+            tail = a;
             return;
         }
         a->nxt = head;
         head = a;
+    }
+
+    // O(1)
+    void InsertAtEnd(int value)
+    {
+        sz++;
+        node *a = CreateNewNode(value);
+        tail->nxt = a;
+        tail = a;
     }
     void Traverse()
     {
@@ -210,17 +224,19 @@ int main()
     l.InsertAtHead(10);
     l.InsertAtHead(10);
     l.InsertAtHead(10);
+    l.InsertAtEnd(100);
+    l.InsertAtEnd(200);
     cout << l.get_size() << '\n';
     l.Traverse();
     // cout << l.get_value(2) << '\n';
     // l.Print_Reverse();
     // cout << l.get_index(60) << '\n';
     // l.Occurrence_Of_Value(10);
-    l.InsertAtAnyIndex(2, 20);
-    cout << l.get_size() << '\n';
-    l.Traverse();
-    l.DeleteAtHead();
-    cout << l.get_size() << '\n';
-    l.Traverse();
+    // l.InsertAtAnyIndex(2, 20);
+    // cout << l.get_size() << '\n';
+    // l.Traverse();
+    // l.DeleteAtHead();
+    // cout << l.get_size() << '\n';
+    // l.Traverse();
     return 0;
 }
